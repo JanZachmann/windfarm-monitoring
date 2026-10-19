@@ -4,7 +4,7 @@ ARG DISTROLESS_IMAGE=gcr.io/distroless/base-debian13:nonroot
 
 FROM ${DISTROLESS_IMAGE} AS distroless
 
-FROM ${DOCKER_NAMESPACE}/rust:trixie AS builder
+FROM ${BUILD_IMAGE} AS builder
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
