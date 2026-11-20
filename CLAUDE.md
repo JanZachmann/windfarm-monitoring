@@ -26,17 +26,20 @@ output `metrics` once per minute.
 
 - The module only runs under the IoT Edge runtime. It uses the edge client,
   and it reads `IOTEDGE_DEVICEID`, `IOTEDGE_IOTHUBHOSTNAME` and
-  `IOTEDGE_MODULEID` as metric labels; it panics if they are missing.
+  `IOTEDGE_MODULEID` as metric labels. If one is missing, the metrics task
+  panics on the first sample; the `dist` profile has `panic = "abort"`,
+  so the image stops the whole module.
 - The location is set once per start. Later desired property updates do not
   change it.
-- The message format is documented in `README.md`. The IoT Edge deployment
-  needs a route from the `metrics` output to `$upstream`; keep the README in
-  line with a format change.
-- For `--deploy` the device needs an existing deployment of the module with
-  restart policy `never`.
+- The IoT Edge deployment needs a route from the `metrics` output to
+  `$upstream`.
+- `README.md` documents the message format. Change it together with the
+  format.
 
 ## Commands
 
-- Build: `cargo build`
+- Build: `cargo build`. It needs the Azure IoT C SDK: pkg-config
+  `azure-iotedge-sdk-dev`, or `AZURESDK_PATH`, `UUID_PATH`, `OPENSSL_PATH`
+  and `CURL_PATH`.
 - Image: `./scripts/build-and-deploy-image.sh --arch arm64`
 - There are no unit tests.
